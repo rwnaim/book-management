@@ -10,9 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,7 +32,6 @@ class BookManagementServiceTests {
 
     private BookEntity bookEntity;
     private BookRequestDto bookRequest;
-    private BookResponseDto bookResponse;
 
     @BeforeEach
     void setUp() {
@@ -42,7 +41,8 @@ class BookManagementServiceTests {
         bookEntity.setAuthor("Naim");
         bookEntity.setCategory("Personal Development");
         bookEntity.setDescription("This is a book description");
-        bookEntity.setDeleted(false);
+        bookEntity.setPrice(BigDecimal.valueOf(100000));
+        bookEntity.setIsDeleted(false);
         bookEntity.setCreatedAt(LocalDateTime.now());
 
         bookRequest = new BookRequestDto();
@@ -50,13 +50,15 @@ class BookManagementServiceTests {
         bookRequest.setAuthor("Rana Wijdan Naim");
         bookRequest.setCategory("Personal Development and Self Help");
         bookRequest.setDescription("This is a book description after update");
+        bookEntity.setPrice(BigDecimal.valueOf(100000));
 
-        bookResponse = new BookResponseDto();
+        BookResponseDto bookResponse = new BookResponseDto();
         bookResponse.setId(1L);
         bookResponse.setTitle("Test Title Book");
         bookResponse.setAuthor("Naim");
         bookResponse.setCategory("Personal Development");
         bookResponse.setDescription("This is a book description");
+        bookEntity.setPrice(BigDecimal.valueOf(100000));
         bookResponse.setIsDeleted(false);
     }
 
@@ -66,7 +68,7 @@ class BookManagementServiceTests {
         List<BookResponseDto> bookResponseDto = bookManagementService.getAllBook();
 
         assertThat(bookResponseDto).hasSize(1);
-        assertThat(bookResponseDto.get(0).getTitle()).isEqualTo("Test Title Book");
+        assertThat(bookResponseDto.getFirst().getTitle()).isEqualTo("Test Title Book");
         verify(bookRepository).findAll();
     }
 
@@ -111,7 +113,7 @@ class BookManagementServiceTests {
         when(bookRepository.findById(1L)).thenReturn(java.util.Optional.of(bookEntity));
         bookManagementService.deleteBook(1L);
 
-        assertThat(bookEntity.isDeleted()).isTrue();
+        assertThat(bookEntity.getIsDeleted()).isTrue();
         verify(bookRepository).findById(1L);
     }
 

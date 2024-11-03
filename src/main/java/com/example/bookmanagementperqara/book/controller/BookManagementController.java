@@ -6,8 +6,11 @@ import com.example.bookmanagementperqara.book.service.BookManagementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/book-service/api/books")
+@Validated
 public class BookManagementController {
 
     private final BookManagementService bookManagementService;
@@ -22,8 +26,9 @@ public class BookManagementController {
     @Operation(summary = "Get all books")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved all books")
     @GetMapping
-    public List<BookResponseDto> getBooks() {
-        return bookManagementService.getAllBook();
+    public ResponseEntity<List<BookResponseDto>> getBooks() {
+        List<BookResponseDto> books = bookManagementService.getAllBook();
+        return ResponseEntity.ok(books);
     }
 
     @Operation(summary = "Get book by id")
@@ -33,14 +38,16 @@ public class BookManagementController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<BookResponseDto> getBookById(@PathVariable Long id) {
-        return ResponseEntity.ok(bookManagementService.getBookById(id));
+        BookResponseDto bookResponse = bookManagementService.getBookById(id);
+        return ResponseEntity.ok(bookResponse);
     }
 
     @Operation(summary = "Create a book")
     @ApiResponse(responseCode = "201", description = "Successfully created the book")
     @PostMapping
-    public ResponseEntity<BookResponseDto> createBook(@RequestBody BookRequestDto requestDto) {
-        return ResponseEntity.ok(bookManagementService.createBook(requestDto));
+    public ResponseEntity<BookResponseDto> createBook(@Valid @RequestBody BookRequestDto requestDto) {
+        BookResponseDto createdBook = bookManagementService.createBook(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
     }
 
     @Operation(summary = "Update a book by id")
@@ -49,7 +56,7 @@ public class BookManagementController {
             @ApiResponse(responseCode = "404", description = "Book not found")
     })
     @PatchMapping("/{id}")
-    public ResponseEntity<BookResponseDto> updateBook(@PathVariable Long id, @RequestBody BookRequestDto requestDto) {
+    public ResponseEntity<BookResponseDto> updateBook(@PathVariable Long id, @Valid @RequestBody BookRequestDto requestDto) {
         return ResponseEntity.ok(bookManagementService.updateBook(id, requestDto));
     }
 

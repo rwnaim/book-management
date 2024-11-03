@@ -3,6 +3,7 @@ package com.example.bookmanagementperqara.book.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,5 +32,7 @@ public class BookEntity {
 
     private LocalDateTime deletedAt;
 
-    private boolean isDeleted;
+    private BigDecimal price;
+
+    private Boolean isDeleted;
 }

@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -40,6 +41,7 @@ public class BookManagementControllerTests {
         bookRequestDto.setAuthor("Naim");
         bookRequestDto.setCategory("Personal Development");
         bookRequestDto.setDescription("This is a book description");
+        bookRequestDto.setPrice(BigDecimal.valueOf(100000));
 
         bookResponseDto = new BookResponseDto();
         bookResponseDto.setId(1L);
@@ -47,6 +49,7 @@ public class BookManagementControllerTests {
         bookResponseDto.setAuthor("Naim");
         bookResponseDto.setCategory("Personal Development");
         bookResponseDto.setDescription("This is a book description");
+        bookRequestDto.setPrice(BigDecimal.valueOf(100000));
         bookResponseDto.setIsDeleted(false);
     }
 
